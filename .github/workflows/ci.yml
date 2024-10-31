@@ -22,3 +22,15 @@ jobs:
 
     - name: Build docker image
       run: docker build -t victor2507/services_passin_docker:${{ steps.generate_sha.outputs.sha }} .
+
+    - name: Log into the container registry
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Push image
+      run: |
+        docker push victor2507/services_passin_docker:${{ steps.generate_sha.outputs.sha }}
+        docker tag victor2507/services_passin_docker:${{ steps.generate_sha.outputs.sha }} victor2507/services_passin_docker:latest
+        docker push victor2507/services_passin_docker:latest
